@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Clock from 'react-live-clock';
 import Clocka from './clocka';
+import Temp from './temperatuur';
 
 
 class App extends Component {
@@ -13,6 +14,7 @@ class App extends Component {
          Kell on praegu:
             <Clock />
             <Clocka/>
+            <Temp/>
         </p>
       </div>
     );
