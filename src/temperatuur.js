@@ -1,31 +1,65 @@
 import React, { Component } from 'react';
-import fetch from 'isomorphic-unfetch'
 
-const API = 'http://api.openweathermap.org/data/2.5/weather?q=Parnu&appid=312148cec8dfac78058217072b44201e';
-const DEFAULT_QUERY = 'redux';
+const urlForTemp = username => {
+    return `https://api.openweathermap.org/data/2.5/weather?q=Parnu&appid=312148cec8dfac78058217072b44201e`
+}
 
-class Temp extends Component {
-    constructor(props) {
-        super(props);
+class FetchTemp extends Component {
 
-        this.state = {
-            temp: 0,
-        };
+    state = {
+        requestFailed: false
     }
 
-    componentDidMount() {
-        const res = fetch(API)
-        const temp =  res.json()
-    }
-    render() {
-        const { temp } = this.state;
+    // lifecycle hook
+    componentDidMount(){
+        // load the API - fetch - that return promise, and then we parse it as json
+        setTimeout(() => {
+            fetch(
+                urlForTemp()
+            )
+                .then(response => {
+                    console.log('Response:',response)
+                    if(!response.ok){
+                        throw Error('Network request fail')
+                    }
 
+                    return response;
+                })
+                .then( data => data.json())
+                .then( data => {
+                    this.setState({
+                        fetchedData: data
+                    })
+                }, () => {
+                    this.setState({
+                        requestFailed: true
+                    })
+                })
+                .catch('Error')
+        },3000)
+
+    }
+
+    render(){
+
+        const { fetchedData } = this.state
+
+        if(!this.state.fetchedData) {
+            return <p>Laen andmeid!</p>
+        }
+
+        if(this.state.requestFailed) {
+            return <p>Ei õnnestunud saada andmeid!</p>
+        }
+
+        console.log('Saadud andmed:', fetchedData)
         return (
             <div>
-                {temp.main.temp}
+                <h2>Hetkel on õues {Math.round(fetchedData.main.temp-273.15)} kraadi.</h2>
             </div>
-        );
+
+        )
     }
 }
 
-export default Temp;
+export default FetchTemp;
