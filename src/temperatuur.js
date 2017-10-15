@@ -1,3 +1,4 @@
+// teine api https://api.darksky.net/forecast/aab089bd99d137d0887988eb420dd8bd/58.3801,24.52?lang=et&units=auto
 import React, { Component } from 'react';
 
 const urlForTemp = username => {
